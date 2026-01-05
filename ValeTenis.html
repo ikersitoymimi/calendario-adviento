@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vale para Jugar al Tenis - Para Milena</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0d3b2a 0%, #1a5c3e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 20%);
+        }
+
+        .tennis-voucher {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.2));
+            width: 90%;
+            max-width: 800px;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            border: 3px solid #4ade80;
+            position: relative;
+        }
+
+        .voucher-header {
+            background: linear-gradient(90deg, #0d3b2a, #1a5c3e);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .voucher-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            transform: rotate(30deg);
+            opacity: 0.3;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: #4ade80;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #ffd166;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .tennis-icon {
+            font-size: 4rem;
+            color: #4ade80;
+            margin: 15px 0;
+            position: relative;
+            z-index: 2;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .voucher-body {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .voucher-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            border: 2px solid rgba(74, 222, 128, 0.3);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .voucher-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px dashed rgba(74, 222, 128, 0.2);
+            border-radius: 18px;
+            pointer-events: none;
+        }
+
+        .voucher-title {
+            font-size: 2.2rem;
+            color: #4ade80;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 700;
+            position: relative;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .voucher-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #4ade80, transparent);
+        }
+
+        .voucher-details {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 12px;
+            border-left: 4px solid #4ade80;
+        }
+
+        .detail-icon {
+            font-size: 1.5rem;
+            color: #4ade80;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .detail-text {
+            font-size: 1.1rem;
+            color: #f8f9fa;
+            font-weight: 500;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+        }
+
+        .highlight {
+            color: #4ade80;
+            font-weight: 700;
+            text-shadow: 0 0 3px rgba(74, 222, 128, 0.3);
+        }
+
+        .message-container {
+            background: rgba(255, 209, 102, 0.15);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 209, 102, 0.4);
+            font-style: italic;
+            text-align: center;
+            line-height: 1.6;
+            font-size: 1.2rem;
+            color: #ffd166;
+            font-weight: 500;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .conditions {
+            background: rgba(255, 107, 139, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 107, 139, 0.4);
+        }
+
+        .conditions h3 {
+            color: #ff6b8b;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .conditions ul {
+            list-style-type: none;
+            padding-left: 10px;
+        }
+
+        .conditions li {
+            margin-bottom: 10px;
+            color: #e9ecef;
+            font-weight: 500;
+            position: relative;
+            padding-left: 25px;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+        }
+
+        .conditions li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4ade80;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #4ade80, #22c55e);
+            color: #0d3b2a;
+            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(74, 222, 128, 0.6);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(90deg, #ff6b8b, #ff9a8b);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 107, 139, 0.4);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 107, 139, 0.6);
+        }
+
+        .voucher-footer {
+            padding: 25px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.25);
+            margin-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: #ff9a8b;
+            line-height: 1.5;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .tennis-ball {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #ffd700;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float 15s linear infinite;
+        }
+
+        .tennis-ball:before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 2px;
+        }
+
+        .tennis-ball:after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(90deg);
+            width: 80%;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 2px;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            25% {
+                transform: translate(100px, 50px) rotate(90deg);
+            }
+
+            50% {
+                transform: translate(50px, 100px) rotate(180deg);
+            }
+
+            75% {
+                transform: translate(-50px, 50px) rotate(270deg);
+            }
+
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .voucher-body {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 2.8rem;
+            }
+
+            .voucher-title {
+                font-size: 1.8rem;
+            }
+
+            .detail-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .voucher-body {
+                padding: 20px;
+            }
+
+            .voucher-card {
+                padding: 20px;
+            }
+
+            .voucher-title {
+                font-size: 1.6rem;
+            }
+
+            .detail-text {
+                font-size: 1rem;
+            }
+
+            .message-container {
+                font-size: 1.1rem;
+                padding: 20px;
+            }
+
+            .footer-text {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tennis-voucher">
+        <!-- Pelotas de tenis flotantes -->
+        <div class="tennis-ball" style="top: 10%; left: 5%; animation-delay: 0s;"></div>
+        <div class="tennis-ball" style="top: 20%; right: 8%; animation-delay: -5s;"></div>
+        <div class="tennis-ball" style="bottom: 30%; left: 10%; animation-delay: -10s;"></div>
+
+        <div class="voucher-header">
+            <h1>Vale para Jugar al Tenis</h1>
+            <div class="subtitle">Un día especial para compartir juntos</div>
+            <div class="tennis-icon">
+                <i class="fas fa-baseball-ball"></i>
+            </div>
+        </div>
+
+        <div class="voucher-body">
+            <div class="voucher-card">
+                <h2 class="voucher-title">VALE CANJEABLE</h2>
+
+                <div class="voucher-details">
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="detail-text">
+                            Para: <span class="highlight">Milena</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="detail-text">
+                            Válido hasta: <span class="highlight">31 de Diciembre de 2026</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="detail-text">
+                            Duración: <span class="highlight">1 hora de juego</span> (ampliable con suplemento)
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="detail-text">
+                            Lugar: <span class="highlight">Pista de tenis a elegir</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-gift"></i>
+                        </div>
+                        <div class="detail-text">
+                            Incluye: <span class="highlight">Reserva de pista, bebidas y siesta</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-container">
+                    "Este vale te garantiza un día completo de diversión, ejercicio y momentos especiales juntos en la
+                    pista de tenis. Prometo darlo todo en cada pelota, celebrar cada punto contigo y, sobretodo,
+                    GANARTE."
+                </div>
+
+                <div class="conditions">
+                    <h3>Condiciones del Vale:</h3>
+                    <ul>
+                        <li>Válido para una sesión de tenis con el emisor del vale</li>
+                        <li>Se canjea mediante acuerdo mutuo de fecha y hora</li>
+                        <li>Incluye masaje postsesión en caso necesario</li>
+                        <li>No incluye fisioterapeuta profesional</li>
+                        <li>Se invalida toda excusa absurda para no jugar</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="canjearVale">
+                    <i class="fas fa-check-circle"></i> Canjear este Vale
+                </button>
+
+                <button class="btn btn-secondary" id="volverCalendario">
+                    <i class="fas fa-calendar-alt"></i> Volver al Calendario
+                </button>
+            </div>
+        </div>
+
+        <div class="voucher-footer">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Botón para canjear el vale
+            document.getElementById('canjearVale').addEventListener('click', function () {
+                window.location.href = 'https://deportes.aytoburgos.es/deporteson/alqinst.php';
+            });
+
+            // Botón para volver al calendario
+            document.getElementById('volverCalendario').addEventListener('click', function () {
+                window.history.back();
+            });
+
+            // Crear más pelotas de tenis flotantes
+            function crearPelotasTenis() {
+                const voucher = document.querySelector('.tennis-voucher');
+                const numPelotas = 8;
+
+                for (let i = 0; i < numPelotas; i++) {
+                    const pelota = document.createElement('div');
+                    pelota.className = 'tennis-ball';
+
+                    // Posición aleatoria
+                    const top = Math.random() * 90;
+                    const left = Math.random() * 90;
+                    const delay = Math.random() * -20;
+                    const duration = 15 + Math.random() * 15;
+
+                    pelota.style.top = `${top}%`;
+                    pelota.style.left = `${left}%`;
+                    pelota.style.animationDelay = `${delay}s`;
+                    pelota.style.animationDuration = `${duration}s`;
+
+                    voucher.appendChild(pelota);
+                }
+            }
+
+            crearPelotasTenis();
+        });
+
+        // SweetAlert para mensajes bonitos
+        window.Swal = window.Swal || {
+            fire: function (options) {
+                alert(options.title + "\n" + (options.html ? "Vale confirmado!" : options.text));
+            }
+        };
+    </script>
+
+    <!-- SweetAlert para mensajes más bonitos -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+
+</html>

@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiMijuego</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a0f0f 0%, #2c1810 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(155, 93, 229, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(241, 91, 181, 0.1) 0%, transparent 20%);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: #9b5de5;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(155, 93, 229, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ffd166;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto 20px;
+            line-height: 1.6;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 2px solid rgba(155, 93, 229, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .instructions {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #9b5de5;
+        }
+
+        .instructions h2 {
+            color: #9b5de5;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .instructions p {
+            color: #ffd166;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .puzzle-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .puzzle-box {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid rgba(241, 91, 181, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .puzzle-box:hover {
+            transform: translateY(-5px);
+            border-color: #f15bb5;
+            box-shadow: 0 5px 20px rgba(241, 91, 181, 0.2);
+        }
+
+        .puzzle-box h3 {
+            color: #f15bb5;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .puzzle-box h3 i {
+            font-size: 1.5rem;
+        }
+
+        .clue {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-style: italic;
+            color: #a5ffd6;
+            border-left: 3px solid #00f5d4;
+        }
+
+        .hint {
+            color: #ffd166;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: rgba(255, 209, 102, 0.1);
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .password-input-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+        }
+
+        .password-input-container h3 {
+            color: #9b5de5;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .password-display {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .password-char {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #9b5de5;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffd166;
+            background: rgba(155, 93, 229, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .password-char.revealed {
+            background: rgba(0, 187, 249, 0.2);
+            border-color: #00bbf9;
+            color: #00f5d4;
+            transform: scale(1.1);
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"] {
+            padding: 15px 20px;
+            border: 2px solid #9b5de5;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.2rem;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #f15bb5;
+            box-shadow: 0 0 15px rgba(241, 91, 181, 0.4);
+        }
+
+        button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #9b5de5, #f15bb5);
+            color: white;
+            box-shadow: 0 5px 15px rgba(155, 93, 229, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(155, 93, 229, 0.6);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(90deg, #00bbf9, #00f5d4);
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 187, 249, 0.4);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 187, 249, 0.6);
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffd166;
+            border: 2px solid rgba(255, 209, 102, 0.5);
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 209, 102, 0.2);
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .success {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 2px solid #00ff88;
+        }
+
+        .error {
+            background: rgba(255, 100, 100, 0.2);
+            color: #ff6464;
+            border: 2px solid #ff6464;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hint-container {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 2px dashed rgba(255, 209, 102, 0.5);
+            text-align: center;
+        }
+
+        .hint-container button {
+            margin: 10px;
+        }
+
+        .hidden-hint {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 209, 102, 0.1);
+            border-radius: 10px;
+            color: #ffd166;
+            animation: fadeIn 0.5s;
+        }
+
+        .password-reveal {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            border: 2px solid #00bbf9;
+            display: none;
+            animation: slideUp 0.5s;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .password-reveal h3 {
+            color: #00f5d4;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .final-password {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00f5d4;
+            letter-spacing: 5px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: monospace;
+            border: 2px solid #00bbf9;
+            text-shadow: 0 0 10px rgba(0, 245, 212, 0.5);
+        }
+
+        .instructions-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .instructions-list li {
+            padding: 10px 0 10px 35px;
+            position: relative;
+            color: #a5ffd6;
+            margin-bottom: 5px;
+        }
+
+        .instructions-list li i {
+            position: absolute;
+            left: 0;
+            top: 10px;
+            color: #9b5de5;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 30px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: #ff9a8b;
+            line-height: 1.5;
+        }
+
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(155, 93, 229, 0.3);
+            font-size: 20px;
+            animation: float 8s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.7;
+            }
+
+            90% {
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .game-container {
+                padding: 20px;
+            }
+
+            .puzzle-container {
+                grid-template-columns: 1fr;
+            }
+
+            .password-char {
+                width: 40px;
+                height: 40px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="hearts" id="hearts-container"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-gamepad"></i> MIMIJUEGO</h1>
+            <div class="subtitle">
+                ¡Hola Mimi! Resuelve estos acertijos para descubrir la contraseña secreta que te dará acceso a algo muy
+                especial más adelante.
+            </div>
+        </div>
+
+        <div class="game-container">
+            <div class="instructions">
+                <h2><i class="fas fa-scroll"></i> Instrucciones del Juego</h2>
+                <ul class="instructions-list">
+                    <li><i class="fas fa-lightbulb"></i> Lee cada acertijo cuidadosamente</li>
+                    <li><i class="fas fa-puzzle-piece"></i> Resuelve los 4 acertijos para obtener pistas</li>
+                    <li><i class="fas fa-key"></i> Cada acertijo revela una letra de la contraseña</li>
+                    <li><i class="fas fa-unlock-alt"></i> Introduce la contraseña completa para ganar</li>
+                    <li><i class="fas fa-star"></i> La contraseña será importante en otro momento</li>
+                </ul>
+            </div>
+
+            <div class="puzzle-container">
+                <div class="puzzle-box" id="puzzle1">
+                    <h3><i class="fas fa-heart"></i> Acertijo 1</h3>
+                    <div class="clue">
+                        "Soy algo que aparece cada noche antes de dormir, un dulce momento único que nos representa."
+                    </div>
+                    <div class="hint">
+                        <strong>Pista:</strong> Te ayudará buscar en tu teclado
+                    </div>
+                    <button class="btn-primary" onclick="solvePuzzle(1)" style="margin-top: 15px; width: 100%;">
+                        <i class="fas fa-check"></i> Resolver Acertijo
+                    </button>
+                </div>
+
+                <div class="puzzle-box" id="puzzle2">
+                    <h3><i class="fas fa-gift"></i> Acertijo 2</h3>
+                    <div class="clue">
+                        "A veces me enfado muy fácil y puedo ir casi tan rápido como la luz pero en el fondo soy tan
+                        cariñoso como un koala."
+                    </div>
+                    <div class="hint">
+                        <strong>Pista:</strong> Pasamos mucho tiempo juntos
+                    </div>
+                    <button class="btn-primary" onclick="solvePuzzle(2)" style="margin-top: 15px; width: 100%;">
+                        <i class="fas fa-check"></i> Resolver Acertijo
+                    </button>
+                </div>
+
+                <div class="puzzle-box" id="puzzle3">
+                    <h3><i class="fas fa-compass"></i> Acertijo 3</h3>
+                    <div class="clue">
+                        "Algunos me conocen por una comida, otros incluso por animales, pero nosotros lo
+                        hacemos por unos días chulísimos"
+                    </div>
+                    <div class="hint">
+                        <strong>Pista:</strong> Dónde vamos ahora, ¿ártico o tropical?
+                    </div>
+                    <button class="btn-primary" onclick="solvePuzzle(3)" style="margin-top: 15px; width: 100%;">
+                        <i class="fas fa-check"></i> Resolver Acertijo
+                    </button>
+                </div>
+
+                <div class="puzzle-box" id="puzzle4">
+                    <h3><i class="fas fa-moon"></i> Acertijo 4</h3>
+                    <div class="clue">
+                        "Soy rápido y feroz, cariñoso pero sombrío, por el día ronroneo y por la noche aunque haga frío,
+                        combato el crimen"
+                    </div>
+                    <div class="hint">
+                        <strong>Pista:</strong> En ocasiones debo esconder mi cara
+                    </div>
+                    <button class="btn-primary" onclick="solvePuzzle(4)" style="margin-top: 15px; width: 100%;">
+                        <i class="fas fa-check"></i> Resolver Acertijo
+                    </button>
+                </div>
+            </div>
+
+            <div class="password-input-container">
+                <h3><i class="fas fa-lock"></i> Contraseña Secreta</h3>
+
+                <div class="password-display" id="passwordDisplay">
+                    <!-- Las letras de la contraseña se generaran aquí -->
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="passwordInput" placeholder="Introduce la contraseña aquí..." maxlength="10">
+                    <button class="btn-secondary" onclick="checkPassword()">
+                        <i class="fas fa-unlock-alt"></i> Verificar Contraseña
+                    </button>
+                </div>
+
+                <div class="feedback" id="feedback"></div>
+            </div>
+
+            <div class="hint-container">
+                <h3><i class="fas fa-question-circle"></i> ¿Necesitas ayuda?</h3>
+                <p>Si te quedas atascada, puedes pedir una pista extra:</p>
+                <button class="btn-back" onclick="showHint()">
+                    <i class="fas fa-lightbulb"></i> Mostrar Pista Extra
+                </button>
+                <div class="hidden-hint" id="extraHint">
+                    <strong>Pista extra:</strong> "En la película de mi infancia, Rayo McQueen encontró a su amor cuando
+                    menos lo esperaba, y yo al igual que él, encontré en ti al Porsche con quien quiero perderme por la
+                    carretera de mi vida. Tú haces latir mi corazón como ese <strong>pistoncito</strong> constante que
+                    da ritmo al motor
+                    de mi existencia"
+                </div>
+            </div>
+
+            <div class="password-reveal" id="passwordReveal">
+                <h3><i class="fas fa-trophy"></i> ¡Felicidades Mimi!</h3>
+                <p>Has descubierto la contraseña secreta. Esta contraseña te dará acceso a una sorpresa especial más
+                    adelante.</p>
+
+                <div class="final-password" id="finalPassword"></div>
+
+                <p><strong>Instrucción importante:</strong> Anota esta contraseña en un lugar seguro, o si lo prefieres,
+                    vuelve aquí cuándo desees :)</p>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn-secondary" onclick="goBack()">
+                        <i class="fas fa-arrow-left"></i> Volver al Calendario
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            " Amar no es mirarse el uno al otro, es mirar juntos en la misma dirección. "
+            - Antoine de Saint-Exupéry
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // VARIABLES Y CONFIGURACIÓN DEL JUEGO
+        // ============================================
+        const PASSWORD = "PISTONCITO";
+        const puzzleSolutions = {
+            1: { answer: "🤍", letter: "P", solved: false },
+            2: { answer: "YUKI", letter: "O", solved: false },
+            3: { answer: "VALENCIA", letter: "T", solved: false },
+            4: { answer: "BATMAN", letter: "C", solved: false }
+        };
+
+        let revealedLetters = 0;
+        let gameCompleted = false;
+
+        // ============================================
+        // INICIALIZACIÓN
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function () {
+            createHearts();
+            initializePasswordDisplay();
+        });
+
+        // ============================================
+        // FUNCIONES DEL JUEGO
+        // ============================================
+        function initializePasswordDisplay() {
+            const passwordDisplay = document.getElementById('passwordDisplay');
+            passwordDisplay.innerHTML = '';
+
+            for (let i = 0; i < PASSWORD.length; i++) {
+                const charDiv = document.createElement('div');
+                charDiv.className = 'password-char';
+                charDiv.id = `char${i}`;
+                charDiv.textContent = '_';
+                passwordDisplay.appendChild(charDiv);
+            }
+        }
+
+        function solvePuzzle(puzzleNumber) {
+            if (puzzleSolutions[puzzleNumber].solved) {
+                showFeedback('Ya resolviste este acertijo!', 'error');
+                return;
+            }
+
+            const answer = prompt(`Introduce la respuesta para el Acertijo ${puzzleNumber}:`).toUpperCase().trim();
+
+            if (answer === puzzleSolutions[puzzleNumber].answer) {
+                console.log('aaaaaaa');
+
+                // Marcar como resuelto
+                puzzleSolutions[puzzleNumber].solved = true;
+
+                // Actualizar interfaz del acertijo
+                const puzzleBox = document.getElementById(`puzzle${puzzleNumber}`);
+                puzzleBox.style.borderColor = '#00bbf9';
+                puzzleBox.style.background = 'rgba(0, 187, 249, 0.1)';
+
+                // Revelar letra en la contraseña
+                revealPasswordLetter(puzzleNumber);
+
+                // Mostrar mensaje de éxito
+                showFeedback(`¡Correcto! Has revelado la letra: ${puzzleSolutions[puzzleNumber].letter}`, 'success');
+
+                // Actualizar botón del acertijo
+                const button = puzzleBox.querySelector('button');
+                button.innerHTML = '<i class="fas fa-check-circle"></i> ¡Resuelto!';
+                button.style.background = 'linear-gradient(90deg, #00bbf9, #00f5d4)';
+                button.disabled = true;
+
+            } else {
+                showFeedback('Respuesta incorrecta. ¡Inténtalo de nuevo!', 'error');
+            }
+        }
+
+        function revealPasswordLetter(puzzleNumber) {
+            // Encontrar qué posición de la contraseña corresponde a este acertijo
+            let position;
+            switch (puzzleNumber) {
+                case 1: position = 0; break; // Primera letra
+                case 2: position = 9; break; // Última letra
+                case 3: position = 3; break; // Cuarta letra
+                case 4: position = 6; break; // Cuarta letra
+            }
+
+            // Revelar la letra
+            const charElement = document.getElementById(`char${position}`);
+            charElement.textContent = puzzleSolutions[puzzleNumber].letter;
+            charElement.classList.add('revealed');
+
+            revealedLetters++;
+
+            // Si se han revelado todas las letras, mostrar pista final
+            if (revealedLetters === 4) {
+                setTimeout(() => {
+                    showFeedback('¡Ya tienes todas las pistas! Ahora intenta adivinar la contraseña completa.', 'success');
+                }, 1000);
+            }
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('passwordInput').value.toUpperCase().trim();
+            const feedback = document.getElementById('feedback');
+
+            if (input === PASSWORD) {
+                // ¡Contraseña correcta!
+                gameCompleted = true;
+                feedback.className = 'feedback success';
+                feedback.innerHTML = `
+                    <i class="fas fa-trophy"></i> ¡FELICIDADES MIMI!<br>
+                    Has descubierto la contraseña secreta.
+                `;
+                feedback.style.display = 'block';
+
+                // Mostrar revelación completa
+                setTimeout(showFinalPassword, 1500);
+
+            } else {
+                // Contraseña incorrecta
+                feedback.className = 'feedback error';
+                feedback.innerHTML = `
+                    <i class="fas fa-times-circle"></i> Contraseña incorrecta<br>
+                    Inténtalo de nuevo. Recuerda las pistas de los acertijos.
+                `;
+                feedback.style.display = 'block';
+
+                // Efecto de sacudida en el input
+                const inputElement = document.getElementById('passwordInput');
+                inputElement.style.animation = 'none';
+                setTimeout(() => {
+                    inputElement.style.animation = 'shake 0.5s';
+                }, 10);
+            }
+        }
+
+        function showFinalPassword() {
+            // Revelar toda la contraseña
+            const passwordDisplay = document.getElementById('passwordDisplay');
+            passwordDisplay.innerHTML = '';
+
+            for (let i = 0; i < PASSWORD.length; i++) {
+                const charDiv = document.createElement('div');
+                charDiv.className = 'password-char revealed';
+                charDiv.textContent = PASSWORD[i];
+                charDiv.style.animationDelay = `${i * 0.1}s`;
+                passwordDisplay.appendChild(charDiv);
+            }
+
+            // Mostrar sección de revelación
+            const revealSection = document.getElementById('passwordReveal');
+            revealSection.style.display = 'block';
+
+            // Mostrar contraseña final
+            document.getElementById('finalPassword').textContent = PASSWORD;
+
+            // Desplazar suavemente a la sección de revelación
+            revealSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showHint() {
+            const hint = document.getElementById('extraHint');
+            hint.style.display = 'block';
+
+            // Animar la aparición
+            hint.style.animation = 'fadeIn 0.5s';
+        }
+
+        function goBack() {
+            // Regresar al calendario
+            window.history.back();
+        }
+
+        function showFeedback(message, type) {
+            const feedback = document.getElementById('feedback');
+            feedback.className = `feedback ${type}`;
+            feedback.innerHTML = message;
+            feedback.style.display = 'block';
+
+            // Ocultar después de 3 segundos
+            setTimeout(() => {
+                feedback.style.display = 'none';
+            }, 3000);
+        }
+
+        function createHearts() {
+            const container = document.getElementById('hearts-container');
+            const numHearts = 20;
+
+            for (let i = 0; i < numHearts; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+
+                // Posición aleatoria
+                const left = Math.random() * 100;
+                const size = Math.random() * 15 + 10;
+                const duration = Math.random() * 10 + 8;
+                const delay = Math.random() * 5;
+
+                heart.style.left = `${left}%`;
+                heart.style.fontSize = `${size}px`;
+                heart.style.animationDuration = `${duration}s`;
+                heart.style.animationDelay = `${delay}s`;
+
+                container.appendChild(heart);
+            }
+        }
+
+        // Añadir animación de sacudida
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Permitir enviar con Enter
+        document.getElementById('passwordInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario de Nuestros Días Especiales - Para Milena</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a0f0f 0%, #2c1810 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(255, 100, 100, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 200, 124, 0.1) 0%, transparent 20%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: #ff6b8b;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 107, 139, 0.5);
+            position: relative;
+            display: inline-block;
+        }
+
+        h1:after {
+            content: '❤️';
+            position: absolute;
+            top: -15px;
+            right: -30px;
+            font-size: 1.8rem;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ffd166;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .date-display {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px auto;
+            max-width: 500px;
+            border: 1px solid rgba(255, 107, 139, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .current-date {
+            font-size: 1.5rem;
+            color: #ffd166;
+            font-weight: 600;
+        }
+
+        .countdown {
+            font-size: 1rem;
+            color: #a5ffd6;
+            margin-top: 10px;
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.15);
+            /* Aumentado contraste */
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px auto 30px;
+            max-width: 800px;
+            font-size: 0.95rem;
+            border-left: 4px solid #ff6b8b;
+            color: #ffd166;
+            /* Color más claro para mejor visibilidad */
+            font-weight: 500;
+            /* Un poco más grueso */
+        }
+
+        .instructions i {
+            color: #ff6b8b;
+            margin-right: 8px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .day-card {
+            aspect-ratio: 1;
+            background: linear-gradient(145deg, rgba(255, 107, 139, 0.15), rgba(173, 216, 230, 0.1));
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(255, 107, 139, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .day-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b8b, #ffd166);
+        }
+
+        .day-card:hover:not(.locked):not(.future) {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            border-color: #ff6b8b;
+        }
+
+        .day-card.locked {
+            cursor: not-allowed;
+            opacity: 0.5;
+            filter: grayscale(0.7);
+        }
+
+        .day-card.opened {
+            border-color: #ffd166;
+            border-width: 3px;
+            box-shadow: 0 0 20px rgba(255, 209, 102, 0.4);
+            background: linear-gradient(145deg, rgba(255, 209, 102, 0.2), rgba(255, 107, 139, 0.15));
+        }
+
+        .day-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #ffd166;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .day-month {
+            font-size: 0.9rem;
+            color: #a5ffd6;
+            font-weight: 600;
+        }
+
+        .opened .day-number {
+            color: #ff6b8b;
+        }
+
+        .lock-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        .opened-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #ffd166;
+            font-size: 1.2rem;
+        }
+
+        /* Modal para mostrar contenido del día */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #2c1810, #1a0f0f);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid #ff6b8b;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.4s;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(90deg, #ff6b8b, #ff9a8b);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-day {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .modal-date {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .close-modal:hover {
+            transform: scale(1.2);
+        }
+
+        .modal-body {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .day-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 2px solid rgba(255, 209, 102, 0.5);
+        }
+
+        .day-message {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: #ffd166;
+            font-style: italic;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border-left: 4px solid #ff6b8b;
+        }
+
+        .footer-message {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 20px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: #ff9a8b;
+            line-height: 1.5;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(255, 107, 139, 0.3);
+            font-size: 20px;
+            animation: float 8s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.7;
+            }
+
+            90% {
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .calendar-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 12px;
+            }
+
+            h1 {
+                font-size: 2.8rem;
+            }
+
+            .day-number {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calendar-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 10px;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+        }
+
+        :root {
+            --color-juego-primario: #9b5de5;
+            --color-juego-secundario: #f15bb5;
+            --color-menu-primario: #00bbf9;
+            --color-menu-secundario: #00f5d4;
+            --color-tenis-primario: #4ade80;
+            --color-tenis-secundario: #22c55e;
+            --color-cine-primario: #ff6b8b;
+            --color-cine-secundario: #ff9a8b;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="hearts" id="hearts-container"></div>
+
+    <div class="container">
+        <header>
+            <h1>FELIZ NAVIDAD MIMI</h1>
+            <div class="subtitle">Calendario de Adviento Especial 23 de Diciembre - 6 de Enero</div>
+
+            <div class="date-display">
+                <div class="current-date" id="current-date">Cargando fecha...</div>
+                <div class="countdown" id="countdown"></div>
+            </div>
+
+            <div class="instructions">
+                <i class="fas fa-gift"></i> Haz clic en cada día para revelar su sorpresa especial. Solo podrás abrir el
+                día correspondiente a la fecha actual o anteriores.
+            </div>
+        </header>
+
+        <main>
+            <div class="calendar-grid" id="calendar-grid">
+                <!-- Los días se generarán con JavaScript -->
+            </div>
+        </main>
+
+        <div class="footer-message" id="footer-message">
+            Cada día contigo es un regalo. Te amo más de lo que las palabras pueden expresar.
+        </div>
+    </div>
+
+    <!-- Modal para mostrar el contenido del día -->
+    <div class="modal" id="dayModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close-modal" id="closeModal">&times;</button>
+                <div class="modal-day" id="modalDay">Día 23</div>
+                <div class="modal-date" id="modalDate">23 de Diciembre</div>
+            </div>
+            <div class="modal-body">
+                <img class="day-image" id="modalImage" src="" alt="Sorpresa del día">
+                <div class="day-message" id="modalMessage">Mensaje especial para ti</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const contenidoDias = {
+            23: { // Gorro Papa Noel
+                imagenUrl: "img/papa_noel.png",
+                mensaje: "Para que mantengas el espíritu navideño calentito, algo especial que te hará sentir como en el Polo Norte."
+            },
+            24: { // Bola Arbol Navidad
+                imagenUrl: "https://images.unsplash.com/photo-1513297887119-d46091b24bfa?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                mensaje: "Un pequeño reflejo de nuestro amor que brillará en cada Navidad, colgando de un lugar muy especial."
+            },
+            25: { // 2 Caramelos
+                imagenUrl: "img/navidad.jpg",
+                mensaje: "Un poco de magia escondida para endulzar este día... ¡Feliz Navidad!"
+            },
+            26: { // Elegir Muñecos Dinosaurios
+                imagenUrl: "img/dinosaurio.avif",
+                mensaje: "El que busca y busca encuentra 🥸 (yo iba para paleontóloga)."
+            },
+            27: { // LLavero Raqueta Tenis
+                imagenUrl: "https://images.unsplash.com/photo-1482517967863-00e15c9b44be?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                mensaje: "Para que siempre lleves eso que tanto disfrutas"
+            },
+            28: { // 2 Ferrero Rocher
+                imagenUrl: "img/dulces.webp",
+                mensaje: "Un dulce detalle como mimi."
+            },
+            29: { // Llavero Mickey Mouse
+                imagenUrl: "img/mickey.png",
+                mensaje: "Tengo dos grandes orejas que todo el mundo reconoce, ¿Sabes quién soy?"
+            },
+
+            // hasta aqui estamos
+
+            30: { // Juego Contraseña
+                imagenUrl: "img/juego.png",
+                mensaje: "Hoy no tienes reaglo... ¡Tienes trabajo!",
+                contenidoExtra: {
+                    tipo: "juego",
+                    textoBoton: "Jugar Minijuego Secreto",
+                    enlace: "JuegoContrasena.html",
+                    icono: "fa-gamepad"
+                    // descripcion: ""
+                }
+            },
+            31: { // Entrada cine
+                imagenUrl: "img/zootropolis2.png",
+                mensaje: "Esta vez cumplimos sí o sí.",
+                contenidoExtra: {
+                    tipo: "cine",
+                    textoBoton: "VALE para ir al Cine",
+                    enlace: "ValeCine.html",
+                    icono: "fa-film"
+                }
+            },
+            1: {
+                imagenUrl: "",
+                mensaje: "un algo de eso u otro"
+            },
+            2: { // Vale Tenis
+                imagenUrl: "img/tenis.png",
+                mensaje: "Llevamos mucho tiempo con algo pendiente, va siendo hora de poner cartas en el asunto.",
+                contenidoExtra: {
+                    tipo: "tenis",
+                    textoBoton: "VALE para Jugar al Tenis",
+                    enlace: "ValeTenis.html",
+                    icono: "fa-baseball-ball"
+                }
+            },
+            3: { // Lego Mickey
+                imagenUrl: "img/legomickey.png",
+                mensaje: "Esta vez es algo que no viene completo... pero con paciencia puedes dejarlo como nuevo."
+            },
+            4: {
+                imagenUrl: "",
+                mensaje: "el otro algo"
+            },
+            5: { // Vale menú
+                imagenUrl: "img/comida.jpg",
+                mensaje: "El día 5 no es un día cualquiera, también se trata del día en el que cumplimos 2 años y 8 meses, por lo que la ocasión merece un VALE especial. PONER CONTRASEÑA:",
+                contenidoExtra: {
+                    tipo: "menu",
+                    textoBoton: "VALE por un Menú Especial",
+                    enlace: "MenuComida.html",
+                    icono: "fa-utensils"
+                    // descripcion: ""
+                }
+            },
+
+            6: { // QRs
+                imagenUrl: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                mensaje: "¡Feliz día de Reyes! Espero que te haya gustado mucho muchooo. No quiero que no quede en el olvido, así que esta vez ¡Estás de suerte!"
+            }
+        };
+
+        // ============================================
+        // FUNCIONES PRINCIPALES
+        // ============================================
+        function generarDiasCalendario() {
+            const calendarGrid = document.getElementById('calendar-grid');
+            calendarGrid.innerHTML = '';
+
+            const now = new Date();
+            const currentYear = now.getFullYear();
+
+            // Determinar año para diciembre (si estamos en enero, usar año anterior)
+            const decemberYear = (now.getMonth() === 0 && now.getDate() <= 6) ? currentYear - 1 : currentYear;
+            const januaryYear = decemberYear + 1;
+
+            // Generar días desde el 23 de diciembre hasta el 31 de diciembre
+            for (let day = 23; day <= 31; day++) {
+                const fechaDia = new Date(decemberYear, 11, day); // 11 = diciembre
+                crearTarjetaDia(day, fechaDia, 'Diciembre');
+            }
+
+            // Generar días desde el 1 de enero hasta el 6 de enero
+            for (let day = 1; day <= 6; day++) {
+                const fechaDia = new Date(januaryYear, 0, day); // 0 = enero
+                crearTarjetaDia(day, fechaDia, 'Enero');
+            }
+        }
+
+        function crearTarjetaDia(numeroDia, fecha, mes) {
+            const calendarGrid = document.getElementById('calendar-grid');
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+            const fechaDia = new Date(fecha);
+            fechaDia.setHours(0, 0, 0, 0);
+
+            const dayCard = document.createElement('div');
+            dayCard.className = 'day-card';
+            dayCard.id = `day-${numeroDia}`;
+            dayCard.dataset.day = numeroDia;
+            dayCard.dataset.mes = mes;
+
+            // Verificar si el día está bloqueado (futuro)
+            const isFuture = fechaDia > now;
+
+            if (isFuture) {
+                dayCard.classList.add('locked');
+                dayCard.title = `Disponible el ${numeroDia} de ${mes}`;
+            } else {
+                // Verificar si ya fue abierto (en localStorage)
+                const openedDays = JSON.parse(localStorage.getItem('openedDays') || '{}');
+                if (openedDays[`${mes}-${numeroDia}`]) {
+                    dayCard.classList.add('opened');
+                }
+            }
+
+            dayCard.innerHTML = `
+                <div class="day-number">${numeroDia}</div>
+                <div class="day-month">${mes}</div>
+                ${isFuture ?
+                    '<i class="fas fa-lock lock-icon"></i>' :
+                    '<i class="fas fa-gift" style="color: #ff6b8b; font-size: 1.2rem; position: absolute; top: 10px; right: 10px;"></i>'
+                }
+                ${dayCard.classList.contains('opened') ?
+                    '<i class="fas fa-check-circle opened-icon"></i>' : ''
+                }
+            `;
+
+            dayCard.addEventListener('click', () => abrirDia(numeroDia, fechaDia, mes, isFuture));
+            calendarGrid.appendChild(dayCard);
+        }
+
+        function abrirDia(numeroDia, fechaDia, mes, isFuture) {
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+
+            // Si el día es futuro, mostrar alerta
+            if (isFuture) {
+                Swal.fire({
+                    title: '¡Todavía no!',
+                    text: `Vuelve el ${numeroDia} de ${mes} para abrir esta sorpresa.`,
+                    icon: 'info',
+                    confirmButtonText: 'Entendido',
+                    background: '#1a0f0f',
+                    color: '#fff',
+                    confirmButtonColor: '#ff6b8b'
+                });
+                return;
+            }
+
+            // Marcar como abierto en localStorage
+            const openedDays = JSON.parse(localStorage.getItem('openedDays') || '{}');
+            openedDays[`${mes}-${numeroDia}`] = true;
+            localStorage.setItem('openedDays', JSON.stringify(openedDays));
+
+            // Actualizar apariencia de la tarjeta
+            const dayCard = document.getElementById(`day-${numeroDia}`);
+            dayCard.classList.add('opened');
+            dayCard.innerHTML = `
+                <div class="day-number">${numeroDia}</div>
+                <div class="day-month">${mes}</div>
+                <i class="fas fa-check-circle opened-icon"></i>
+            `;
+
+            // Mostrar contenido del día en el modal
+            mostrarModal(numeroDia, mes);
+        }
+
+        function mostrarModal(numeroDia, mes) {
+            const modal = document.getElementById('dayModal');
+            const modalDay = document.getElementById('modalDay');
+            const modalDate = document.getElementById('modalDate');
+            const modalImage = document.getElementById('modalImage');
+            const modalMessage = document.getElementById('modalMessage');
+
+            // Configurar contenido básico del modal
+            modalDay.textContent = `Día ${numeroDia}`;
+            modalDate.textContent = `${numeroDia} de ${mes}`;
+
+            // Obtener contenido del día
+            const contenido = contenidoDias[numeroDia] || {
+                imagenUrl: "https://images.unsplash.com/photo-1511988617509-a57c8a288659?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                mensaje: `Un día más para demostrarte cuánto te amo, Milena. Eres lo mejor de mi vida.`
+            };
+
+            modalImage.src = contenido.imagenUrl;
+            modalImage.alt = `Sorpresa del día ${numeroDia}`;
+
+            // Limpiar contenido previo del modal
+            modalMessage.innerHTML = '';
+
+            // Crear contenedor para el mensaje
+            const messageContainer = document.createElement('div');
+            messageContainer.style.cssText = `
+        margin-bottom: ${contenido.contenidoExtra ? '20px' : '0'};
+    `;
+            messageContainer.textContent = contenido.mensaje;
+            modalMessage.appendChild(messageContainer);
+
+            // Si el día tiene contenido extra, agregar botón correspondiente
+            if (contenido.contenidoExtra) {
+                agregarBotonContenidoExtra(modalMessage, contenido.contenidoExtra);
+            }
+
+            // Mostrar modal
+            modal.style.display = 'flex';
+
+            // Reasignar eventos de cierre
+            asignarEventosCierreModal(modal);
+        }
+
+        // ============================================
+        // FUNCIÓN PARA AGREGAR BOTÓN DE CONTENIDO EXTRA
+        // ============================================
+        function agregarBotonContenidoExtra(container, contenidoExtra) {
+            const boton = document.createElement('button');
+
+            // Estilos base para todos los botones de contenido extra
+            boton.style.cssText = `
+        background: linear-gradient(90deg, var(--color-primario, #ff6b8b), var(--color-secundario, #ff9a8b));
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 50px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(255, 107, 139, 0.4);
+        font-family: 'Poppins', sans-serif;
+        width: 100%;
+        max-width: 350px;
+    `;
+
+            // Personalizar colores según el tipo de contenido
+            switch (contenidoExtra.tipo) {
+                case 'juego':
+                    boton.style.setProperty('--color-primario', '#9b5de5');
+                    boton.style.setProperty('--color-secundario', '#f15bb5');
+                    boton.style.boxShadow = '0 5px 15px rgba(155, 93, 229, 0.4)';
+                    break;
+                case 'menu':
+                    boton.style.setProperty('--color-primario', '#00bbf9');
+                    boton.style.setProperty('--color-secundario', '#00f5d4');
+                    boton.style.boxShadow = '0 5px 15px rgba(0, 187, 249, 0.4)';
+                    break;
+                case 'tenis':
+                    boton.style.setProperty('--color-primario', '#4ade80');
+                    boton.style.setProperty('--color-secundario', '#22c55e');
+                    boton.style.boxShadow = '0 5px 15px rgba(74, 222, 128, 0.4)';
+                    break;
+                case 'cine':
+                    boton.style.setProperty('--color-primario', '#ff6b8b');
+                    boton.style.setProperty('--color-secundario', '#ff9a8b');
+                    boton.style.boxShadow = '0 5px 15px rgba(255, 107, 139, 0.4)';
+                    break;
+            }
+
+            boton.innerHTML = `
+        <i class="fas ${contenidoExtra.icono}" style="margin-right: 10px;"></i>
+        ${contenidoExtra.textoBoton}
+    `;
+
+            // Agregar efectos de hover
+            boton.addEventListener('mouseenter', () => {
+                boton.style.transform = 'translateY(-3px)';
+                boton.style.boxShadow = `0 8px 20px ${contenidoExtra.tipo === 'juego' ? 'rgba(155, 93, 229, 0.6)' :
+                    contenidoExtra.tipo === 'menu' ? 'rgba(0, 187, 249, 0.6)' :
+                        'rgba(255, 107, 139, 0.6)'
+                    }`;
+            });
+
+            boton.addEventListener('mouseleave', () => {
+                boton.style.transform = 'translateY(0)';
+                boton.style.boxShadow = `0 5px 15px ${contenidoExtra.tipo === 'juego' ? 'rgba(155, 93, 229, 0.4)' :
+                    contenidoExtra.tipo === 'menu' ? 'rgba(0, 187, 249, 0.4)' :
+                        'rgba(255, 107, 139, 0.4)'
+                    }`;
+            });
+
+            // Agregar funcionalidad de redirección
+            boton.addEventListener('click', () => {
+                if (contenidoExtra.enlace) {
+                    window.location.href = contenidoExtra.enlace;
+                }
+            });
+
+            container.appendChild(boton);
+
+            // Agregar texto descriptivo opcional
+            if (contenidoExtra.descripcion) {
+                const descripcion = document.createElement('p');
+                descripcion.style.cssText = `
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #a5ffd6;
+            font-style: italic;
+        `;
+                descripcion.textContent = contenidoExtra.descripcion;
+                container.appendChild(descripcion);
+            }
+        }
+
+        // ============================================
+        // FUNCIÓN PARA ASIGNAR EVENTOS DE CIERRE DEL MODAL
+        // ============================================
+        function asignarEventosCierreModal(modal) {
+            // Botón de cierre
+            document.getElementById('closeModal').onclick = () => {
+                modal.style.display = 'none';
+            };
+
+            // Cerrar al hacer clic fuera del modal
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            };
+
+            // Cerrar con tecla ESC
+            document.addEventListener('keydown', function cerrarConESC(e) {
+                if (e.key === 'Escape' && modal.style.display === 'flex') {
+                    modal.style.display = 'none';
+                    document.removeEventListener('keydown', cerrarConESC);
+                }
+            });
+        }
+
+        function actualizarReloj() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+
+            document.getElementById('current-date').textContent =
+                now.toLocaleDateString('es-ES', options);
+
+            // Calcular días restantes hasta el 6 de enero
+            const currentYear = now.getFullYear();
+            let nextJan6 = new Date(currentYear, 0, 6); // 6 de enero del año actual
+
+            // Si ya pasó el 6 de enero, calcular para el próximo año
+            if (now > nextJan6) {
+                nextJan6 = new Date(currentYear + 1, 0, 6);
+            }
+
+            const diffTime = nextJan6 - now;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays > 0) {
+                document.getElementById('countdown').textContent =
+                    `Faltan ${diffDays} días para el Día de Reyes (6 de Enero)`;
+            } else if (diffDays === 0) {
+                document.getElementById('countdown').textContent =
+                    `¡Feliz Día de Reyes!`;
+            } else {
+                document.getElementById('countdown').textContent =
+                    `El calendario ha terminado, pero nuestro amor permanece.`;
+            }
+        }
+
+        function crearCorazones() {
+            const container = document.getElementById('hearts-container');
+            const numHearts = 15;
+
+            for (let i = 0; i < numHearts; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+
+                // Posición aleatoria
+                const left = Math.random() * 100;
+                const size = Math.random() * 20 + 10;
+                const duration = Math.random() * 10 + 8;
+                const delay = Math.random() * 5;
+
+                heart.style.left = `${left}%`;
+                heart.style.fontSize = `${size}px`;
+                heart.style.animationDuration = `${duration}s`;
+                heart.style.animationDelay = `${delay}s`;
+
+                container.appendChild(heart);
+            }
+        }
+
+        // ============================================
+        // INICIALIZACIÓN
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            generarDiasCalendario();
+            actualizarReloj();
+            crearCorazones();
+
+            // Actualizar reloj cada segundo
+            setInterval(actualizarReloj, 1000);
+
+            // Personalizar mensaje final si está en localStorage
+            const mensajePersonalizado = localStorage.getItem('mensajeParaMilena');
+            if (mensajePersonalizado) {
+                document.getElementById('footer-message').textContent = mensajePersonalizado;
+            }
+        });
+
+        // SweetAlert para mensajes bonitos (se cargará de CDN)
+        // Solo se usará si está disponible
+        window.Swal = window.Swal || {
+            fire: function (options) {
+                alert(options.title + "\n" + options.text);
+            }
+        };
+    </script>
+
+    <!-- SweetAlert para mensajes más bonitos (opcional) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+
+</html>
