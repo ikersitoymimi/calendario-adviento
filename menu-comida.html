@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Especial para Mimi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a0f0f 0%, #2c1810 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 107, 139, 0.3);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: #ff6b8b;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(255, 107, 139, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ffd166;
+            font-style: italic;
+        }
+        
+        .menu-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            border-left: 5px solid #ff6b8b;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            color: #ffd166;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .section-title i {
+            color: #ff6b8b;
+        }
+        
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-name {
+            font-size: 1.2rem;
+            color: #fff;
+            flex: 2;
+        }
+        
+        .item-description {
+            font-size: 0.9rem;
+            color: #a5ffd6;
+            flex: 3;
+            padding-right: 20px;
+        }
+        
+        .item-price {
+            font-size: 1.3rem;
+            color: #ff6b8b;
+            font-weight: 600;
+            flex: 1;
+            text-align: right;
+        }
+        
+        .special-note {
+            background: linear-gradient(90deg, rgba(255, 107, 139, 0.1), rgba(255, 209, 102, 0.1));
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 107, 139, 0.3);
+        }
+        
+        .note-title {
+            color: #ffd166;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+        
+        .note-text {
+            color: #fff;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .back-button {
+            display: block;
+            width: 200px;
+            margin: 40px auto 0;
+            padding: 15px;
+            background: linear-gradient(90deg, #ff6b8b, #ff9a8b);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 107, 139, 0.4);
+        }
+        
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .heart {
+            position: absolute;
+            color: rgba(255, 107, 139, 0.3);
+            font-size: 20px;
+            animation: float 8s linear infinite;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .menu-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .item-price {
+                text-align: left;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts" id="hearts-container"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Menú Especial para Mimi</h1>
+            <div class="subtitle">Preparado con todo el amor del mundo para la persona más especial</div>
+        </div>
+        
+        <div class="menu-section">
+            <h2 class="section-title"><i class="fas fa-utensils"></i> Entradas</h2>
+            
+            <div class="menu-item">
+                <div class="item-name">Bruschetta de Tomate y Albahaca</div>
+                <div class="item-description">Pan crujiente con tomate fresco, albahaca y un toque de aceite de oliva virgen extra</div>
+                <div class="item-price">❤️</div>
+            </div>
+            
+            <div class="menu-item">
+                <div class="item-name">Crema de Calabaza</div>
+                <div class="item-description">Suave crema con toques de jengibre y nuez moscada, acompañada de croutons caseros</div>
+                <div class="item-price">❤️</div>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <h2 class="section-title"><i class="fas fa-drumstick-bite"></i> Platos Principales</h2>
+            
+            <div class="menu-item">
+                <div class="item-name">Salmón al Horno con Miel y Mostaza</div>
+                <div class="item-description">Salmón fresco horneado con salsa de miel, mostaza Dijon y eneldo, acompañado de verduras asadas</div>
+                <div class="item-price">❤️</div>
+            </div>
+            
+            <div class="menu-item">
+                <div class="item-name">Risotto de Champiñones y Trufa</div>
+                <div class="item-description">Arroz cremoso con champiñones silvestres y un toque de aceite de trufa negra</div>
+                <div class="item-price">❤️</div>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <h2 class="section-title"><i class="fas fa-ice-cream"></i> Postres</h2>
+            
+            <div class="menu-item">
+                <div class="item-name">Tarta de Chocolate y Frambuesas</div>
+                <div class="item-description">Tarta de chocolate negro con corazón de frambuesas y salsa de frutos rojos</div>
+                <div class="item-price">❤️</div>
+            </div>
+            
+            <div class="menu-item">
+                <div class="item-name">Copa de Frutos Rojos</div>
+                <div class="item-description">Mezcla de frutos rojos frescos con yogur griego y un toque de miel</div>
+                <div class="item-price">❤️</div>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <h2 class="section-title"><i class="fas fa-wine-glass-alt"></i> Bebidas</h2>
+            
+            <div class="menu-item">
+                <div class="item-name">Vino Tinto Reserva</div>
+                <div class="item-description">Selección especial para acompañar la cena</div>
+                <div class="item-price">❤️</div>
+            </div>
+            
+            <div class="menu-item">
+                <div class="item-name">Cóctel de Frutas Especial</div>
+                <div class="item-description">Mezcla refrescante de frutas tropicales con un toque de menta</div>
+                <div class="item-price">❤️</div>
+            </div>
+        </div>
+        
+        <div class="special-note">
+            <div class="note-title">¡Nota Especial!</div>
+            <div class="note-text">
+                Este menú ha sido creado especialmente para ti, mi amor. Cada plato representa un momento especial que hemos compartido juntos. 
+                Prometo prepararlo con todo el cariño y dedicación que te mereces. 
+                <br><br>
+                <strong>Eres la mejor comida que he probado en mi vida.</strong>
+            </div>
+        </div>
+        
+        <a href="javascript:history.back()" class="back-button">
+            <i class="fas fa-arrow-left" style="margin-right: 10px;"></i>
+            Volver al Calendario
+        </a>
+    </div>
+    
+    <script>
+        // Crear corazones flotantes
+        function crearCorazones() {
+            const container = document.getElementById('hearts-container');
+            const numHearts = 20;
+            
+            for (let i = 0; i < numHearts; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+                
+                const left = Math.random() * 100;
+                const size = Math.random() * 25 + 15;
+                const duration = Math.random() * 10 + 8;
+                const delay = Math.random() * 5;
+                
+                heart.style.left = `${left}%`;
+                heart.style.fontSize = `${size}px`;
+                heart.style.animationDuration = `${duration}s`;
+                heart.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(heart);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', crearCorazones);
+    </script>
+</body>
+</html>
